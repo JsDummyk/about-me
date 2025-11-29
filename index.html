@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DuMm | Smart Teen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              primary: '#3b82f6',
+              secondary: '#10b981',
+              dark: '#0f172a',
+              darker: '#020617',
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        color: #f8fafc;
+        background-color: #020617;
+        /* Layered Backgrounds */
+        background-image: 
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(180deg, #020617 0%, #0f172a 30%, #172554 100%);
+        background-size: 50px 50px, 50px 50px, 100% 100%;
+        background-attachment: scroll;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      .text-glow {
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      }
+      
+      /* --- PREMIUM GLASSMORPHISM --- */
+      .glass-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      }
+
+      .glass-button {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .glass-panel {
+         background: rgba(15, 23, 42, 0.4);
+         backdrop-filter: blur(16px);
+         -webkit-backdrop-filter: blur(16px);
+         border: 1px solid rgba(255, 255, 255, 0.08);
+         box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+      }
+      
+      .glass-gloss {
+        position: relative;
+        overflow: hidden;
+      }
+      .glass-gloss::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+        transform: skewX(-25deg);
+        pointer-events: none;
+        transition: 0s;
+      }
+      .glass-gloss:hover::before {
+        left: 200%;
+        transition: 0.7s ease-in-out;
+      }
+
+      /* --- SCANLINES & ATMOSPHERE --- */
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.2) 50%,
+          rgba(0,0,0,0.2)
+        );
+        background-size: 100% 4px;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.15;
+      }
+
+      .particle {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.3;
+        pointer-events: none;
+        animation: float-particle linear infinite;
+      }
+
+      @keyframes float-particle {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 0.5; }
+        90% { opacity: 0.5; }
+        100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+      }
+
+      /* --- HOLOGRAPHIC 3D EFFECTS --- */
+      .holo-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0; 
+        pointer-events: none;
+        overflow: hidden;
+        perspective: 1000px;
+      }
+
+      .holo-object {
+        position: absolute;
+        transform-style: preserve-3d;
+      }
+
+      /* CUBE STYLES */
+      .cube {
+        width: 120px;
+        height: 120px;
+        transform-style: preserve-3d;
+        animation: spin-3d 20s linear infinite;
+      }
+
+      .cube-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid rgba(56, 189, 248, 0.4);
+        background: rgba(56, 189, 248, 0.05);
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backface-visibility: visible;
+      }
+      
+      .cube-face::after {
+        content: '';
+        width: 50%;
+        height: 50%;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+      }
+
+      .face-front  { transform: rotateY(0deg) translateZ(60px); }
+      .face-back   { transform: rotateY(180deg) translateZ(60px); }
+      .face-right  { transform: rotateY(90deg) translateZ(60px); }
+      .face-left   { transform: rotateY(-90deg) translateZ(60px); }
+      .face-top    { transform: rotateX(90deg) translateZ(60px); }
+      .face-bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+      /* CRYSTAL STYLES */
+      .crystal {
+        width: 100px;
+        height: 100px;
+        transform-style: preserve-3d;
+        animation: spin-crystal 25s linear infinite;
+      }
+
+      .crystal .cube-face {
+        border-color: rgba(168, 85, 247, 0.5);
+        background: rgba(168, 85, 247, 0.05);
+        box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
+      }
+      .crystal .cube-face::after {
+        border-color: rgba(168, 85, 247, 0.3);
+        border-radius: 50%;
+      }
+      
+      .face-front-c  { transform: rotateY(0deg) translateZ(50px); }
+      .face-back-c   { transform: rotateY(180deg) translateZ(50px); }
+      .face-right-c  { transform: rotateY(90deg) translateZ(50px); }
+      .face-left-c   { transform: rotateY(-90deg) translateZ(50px); }
+      .face-top-c    { transform: rotateX(90deg) translateZ(50px); }
+      .face-bottom-c { transform: rotateX(-90deg) translateZ(50px); }
+
+
+      /* RINGS STYLES */
+      .holo-rings {
+        width: 250px;
+        height: 250px;
+        position: absolute;
+        transform-style: preserve-3d;
+      }
+      
+      .ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: rgba(16, 185, 129, 0.6);
+        border-bottom-color: rgba(16, 185, 129, 0.6);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+      }
+      
+      .ring-1 { animation: spin-y 10s linear infinite; }
+      .ring-2 { animation: spin-x 15s linear infinite; width: 70%; height: 70%; top: 15%; left: 15%; border-top-color: rgba(59, 130, 246, 0.6); border-bottom-color: rgba(59, 130, 246, 0.6); }
+      .ring-3 { animation: spin-z 20s linear infinite; width: 40%; height: 40%; top: 30%; left: 30%; border-color: rgba(255, 255, 255, 0.3); border-width: 1px; }
+
+      /* WIREFRAME SPHERE STYLES */
+      .sphere {
+        width: 140px;
+        height: 140px;
+        transform-style: preserve-3d;
+        animation: spin-3d-slow 30s linear infinite;
+        pointer-events: none;
+      }
+      
+      .sphere-ring {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+      }
+      
+      .sphere-primary .sphere-ring { border-color: rgba(59, 130, 246, 0.6); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+      .sphere-secondary .sphere-ring { border-color: rgba(16, 185, 129, 0.6); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+
+      .sr-1 { transform: rotateY(0deg); }
+      .sr-2 { transform: rotateY(30deg); }
+      .sr-3 { transform: rotateY(60deg); }
+      .sr-4 { transform: rotateY(90deg); }
+      .sr-5 { transform: rotateY(120deg); }
+      .sr-6 { transform: rotateY(150deg); }
+      .sr-h { transform: rotateX(90deg); border-color: rgba(255,255,255,0.2); border-style: dashed; }
+
+      @keyframes spin-3d {
+        0% { transform: rotate3d(1, 1, 1, 0deg); }
+        100% { transform: rotate3d(1, 1, 1, 360deg); }
+      }
+      
+      @keyframes spin-3d-slow {
+        0% { transform: rotate3d(1, 0.5, 0.5, 0deg); }
+        100% { transform: rotate3d(1, 0.5, 0.5, 360deg); }
+      }
+
+      @keyframes spin-crystal {
+        0% { transform: rotateX(45deg) rotateZ(45deg) rotateY(0deg); }
+        100% { transform: rotateX(45deg) rotateZ(45deg) rotateY(360deg); }
+      }
+      
+      @keyframes spin-y { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+      @keyframes spin-x { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(360deg); } }
+      @keyframes spin-z { 0% { transform: rotateZ(0deg); } 100% { transform: rotateZ(360deg); } }
+      
+      @keyframes float-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-30px); }
+      }
+
+      /* DRIFT ANIMATIONS */
+      .drift-1 { animation: drift-path-1 45s ease-in-out infinite alternate; }
+      .drift-2 { animation: drift-path-2 60s ease-in-out infinite alternate; }
+      .drift-3 { animation: drift-path-3 50s ease-in-out infinite alternate; }
+
+      @keyframes drift-path-1 {
+        0% { transform: translate(0, 0); }
+        33% { transform: translate(15vw, 10vh); }
+        66% { transform: translate(-10vw, 25vh); }
+        100% { transform: translate(5vw, 40vh); }
+      }
+
+      @keyframes drift-path-2 {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(-25vw, 15vh); }
+        100% { transform: translate(20vw, 30vh); }
+      }
+
+      @keyframes drift-path-3 {
+        0% { transform: translate(0, 0); }
+        33% { transform: translate(20vw, -10vh); }
+        66% { transform: translate(-15vw, -20vh); }
+        100% { transform: translate(10vw, -5vh); }
+      }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+  <script type="module" crossorigin src="./assets/index-DFMHOtYQ.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
